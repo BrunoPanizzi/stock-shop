@@ -2,62 +2,63 @@ import {
   Component,
   ParentComponent,
   For,
-  createSignal,
-  createEffect,
+  createResource,
+  Show,
+  ErrorBoundary,
 } from 'solid-js'
 
 import roundTo from '../../utils/roundTo'
 
 import { stock } from '../../types/stock'
 
-import { stocks } from '../../mocks/stocksMock'
+import { changeAmount, stocks } from '../../store/stocksStore'
+import { getStock } from '../../services/stocksService'
 
 const HeaderLabel: ParentComponent = ({ children }) => (
   <th class="text-lg font-bold mb-2">{children}</th>
 )
 
-interface rowProps extends stock {
-  setAmount: (amount: number) => void
+interface rowProps {
+  stock: stock
 }
-const StockRow: Component<rowProps> = ({
-  ticker,
-  amount,
-  setAmount,
-  price,
-  weight,
-}) => {
-  const handleAmountChange = (e: InputEvent) => {
-    setAmount(e.currentTarget.value)
-  }
+const StockRow: Component<rowProps> = ({ stock }) => {
+  const [val, { refetch }] = createResource(() => {
+    console.log('fetching')
+    return getStock(stock.ticker)
+  })
 
   return (
     <tr>
-      <td>{ticker}</td>
+      <td>{stock.ticker}</td>
       <td>
         <input
-          class="bg-transparent"
+          class="bg-transparent border w-full focus:outline-0 focus:border-slate-800"
           type="number"
-          value={amount}
-          onInput={handleAmountChange}
+          min={0}
+          value={stock.amount || 0}
+          onInput={(e) => {
+            changeAmount(stock.ticker, e.currentTarget.valueAsNumber || 0)
+          }}
         />
       </td>
-      <td>{price}</td>
-      <td>{weight}</td>
-      <td>{roundTo(amount * price, 2)}</td>
+      <td>
+        <ErrorBoundary
+          fallback={() => <button onClick={refetch}>retry</button>}
+        >
+          <Show when={!val.loading} fallback={'loading...'}>
+            {val().price}
+          </Show>
+        </ErrorBoundary>
+      </td>
+      <td>{stock.weight}</td>
+      <td>{roundTo(stock.amount * stock.price, 2)}</td>
     </tr>
   )
 }
 
 const Table: Component = () => {
-  const [stocksSignal, setStocksSignal] = createSignal(stocks)
-
-  createEffect(() => {
-    console.log('effect', stocksSignal())
-  })
-  console.log('rendered', stocksSignal)
-
   return (
-    <table class="border w-full bg-white bg-opacity-20">
+    <table class="border w-full bg-white bg-opacity-10 table-fixed">
       <thead class="border-b-2 ">
         <tr>
           <HeaderLabel>Ticker</HeaderLabel>
@@ -68,20 +69,7 @@ const Table: Component = () => {
         </tr>
       </thead>
       <tbody>
-        <For each={stocksSignal()}>
-          {(stock) => (
-            <StockRow
-              {...stock}
-              setAmount={(amount: number) => {
-                setStocksSignal((prev) =>
-                  prev.map((s) =>
-                    s.ticker === stock.ticker ? { ...s, amount } : s
-                  )
-                )
-              }}
-            />
-          )}
-        </For>
+        <For each={stocks}>{(stock) => <StockRow stock={stock} />}</For>
       </tbody>
     </table>
   )
