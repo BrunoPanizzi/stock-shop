@@ -21,12 +21,10 @@ interface stockResponse {
 }
 
 export const getStock = async (ticker: string) => {
-  console.log('fetching', ticker)
   const response = await fetch(makeUrl(ticker, apiKey))
   const rawData = (await response.json()) as stockResponse
   const data: options = rawData['Global Quote']
 
-  console.log(data['05. price'])
   return {
     ticker: data['01. symbol'],
     price: data['05. price'],
