@@ -4,16 +4,19 @@ import roundTo from '../../utils/roundTo'
 
 import { stock } from '../../types/stock'
 
-import { changeAmount } from '../../store/stocksStore'
+import { changeAmount, setPrice } from '../../store/stocksStore'
 import { getStock } from '../../services/stocksService'
 
 interface rowProps {
   stock: stock
 }
 export const StockRow: Component<rowProps> = ({ stock }) => {
-  const [info, { mutate, refetch }] = createResource(
-    async () => await getStock(stock.ticker)
-  )
+  const [info, { mutate, refetch }] = createResource(async () => {
+    const res = await getStock(stock.ticker)
+    setPrice(stock.ticker, Number(res.price))
+
+    return res
+  })
 
   return (
     <tr>
