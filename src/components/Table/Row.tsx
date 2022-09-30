@@ -10,6 +10,7 @@ import { getStock } from '../../services/stocksService'
 interface rowProps {
   stock: stock
 }
+
 export const StockRow: Component<rowProps> = ({ stock }) => {
   const [info, { mutate, refetch }] = createResource(async () => {
     const res = await getStock(stock.ticker)

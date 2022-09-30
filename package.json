@@ -17,6 +17,8 @@
     "vite-plugin-solid": "^2.3.0"
   },
   "dependencies": {
+    "buffer": "^6.0.3",
+    "protobufjs": "^7.1.2",
     "solid-js": "^1.5.1"
   }
 }
