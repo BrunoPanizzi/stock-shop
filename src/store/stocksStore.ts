@@ -7,7 +7,7 @@ export const [stocks, setStocks] = createStore<stockWithPrice[]>([
     ticker: 'ITSA3',
     amount: 0,
     weight: 1,
-    price: 0,
+    price: null,
     get value() {
       return this.amount * this.price
     },
@@ -16,7 +16,7 @@ export const [stocks, setStocks] = createStore<stockWithPrice[]>([
     ticker: 'B3SA3',
     amount: 0,
     weight: 1,
-    price: 0,
+    price: null,
     get value() {
       return this.amount * this.price
     },
@@ -25,7 +25,7 @@ export const [stocks, setStocks] = createStore<stockWithPrice[]>([
     ticker: 'WEGE3',
     amount: 0,
     weight: 1,
-    price: 0,
+    price: null,
     get value() {
       return this.amount * this.price
     },
@@ -34,7 +34,7 @@ export const [stocks, setStocks] = createStore<stockWithPrice[]>([
     ticker: 'ARZZ3',
     amount: 5,
     weight: 1,
-    price: 0,
+    price: null,
     get value() {
       return this.amount * this.price
     },
@@ -43,7 +43,7 @@ export const [stocks, setStocks] = createStore<stockWithPrice[]>([
     ticker: 'MYPK3',
     amount: 0,
     weight: 1,
-    price: 0,
+    price: null,
     get value() {
       return this.amount * this.price
     },
@@ -52,7 +52,7 @@ export const [stocks, setStocks] = createStore<stockWithPrice[]>([
     ticker: 'MDIA3',
     amount: 0,
     weight: 1,
-    price: 0,
+    price: null,
     get value() {
       return this.amount * this.price
     },

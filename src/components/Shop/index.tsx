@@ -1,15 +1,16 @@
-import { Component, createSignal } from 'solid-js'
+import { Component, createSignal, Show } from 'solid-js'
 
 import { stocks } from '../../store/stocksStore'
 
 import decidePurchase from '../../utils/decidePurchase'
 
 import Input from '../Input'
+import Results from './Results'
 
 const Shop: Component = () => {
   const [value, setValue] = createSignal('')
 
-  const [results, setResults] = createSignal({})
+  const [results, setResults] = createSignal<Record<string, number>>()
 
   return (
     <>
@@ -25,12 +26,12 @@ const Shop: Component = () => {
       </label>
       <button
         class="bg-emerald-500 py-3 px-7 rounded-md text-lg font-bold"
-        onClick={() =>
-          console.log(decidePurchase([...stocks], Number(value())))
-        }
+        onClick={() => setResults(decidePurchase([...stocks], Number(value())))}
       >
         Calculate!
       </button>
+
+      <Results results={results} clear={() => setResults()} />
     </>
   )
 }

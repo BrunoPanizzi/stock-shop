@@ -5,6 +5,6 @@ export interface stock {
 }
 
 export interface stockWithPrice extends stock {
-  price: number
+  price: number | null
   value: number
 }

@@ -4,31 +4,41 @@ export default function decidePurchase(
   stocksPosition: stockWithPrice[],
   moneyToInvest: number
 ) {
-  let stocks = stocksPosition.map((s) => ({
-    ...s,
-    get value() {
-      return this.price * this.amount
-    },
-  }))
+  let stocks = cloneStocks(stocksPosition)
   let totalMoney = moneyToInvest
+
   const smallestValue = stocks.reduce((prev, curr) =>
     prev.value < curr.value ? prev : curr
   ).price
 
-  let purchases = []
+  let purchases: string[] = []
 
-  do {
+  while (totalMoney > smallestValue) {
     stocks = stocks.sort((a, b) => (a.value > b.value ? 1 : -1))
     totalMoney -= stocks[0].price
-    stocks[0].amount = stocks[0].amount + 1
+    stocks[0].amount++
 
     purchases.push(stocks[0].ticker)
-  } while (totalMoney > smallestValue)
+  }
 
-  const count = {}
+  const count: Record<string, number> = {}
 
   purchases.forEach((stock) => {
     count[stock] = (count[stock] || 0) + 1
   })
   return count
+}
+
+function cloneStocks(stocks: stockWithPrice[]): stockWithPrice[] {
+  return stocks
+    .map(
+      (s) =>
+        s.price && {
+          ...s,
+          get value() {
+            return this.price * this.amount
+          },
+        }
+    )
+    .filter((s) => !!s)
 }
