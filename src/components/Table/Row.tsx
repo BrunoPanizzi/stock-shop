@@ -1,24 +1,12 @@
-import { Component, createResource, Switch, Match } from 'solid-js'
+import { Component, Show } from 'solid-js'
 
-import roundTo from '../../utils/roundTo'
-
-import { stock } from '../../types/stock'
-
-import { changeAmount, setPrice } from '../../store/stocksStore'
-import { getStock } from '../../services/stocksService'
+import { changeAmount, superStock } from '../../store/stocksStore'
 
 interface rowProps {
-  stock: stock
+  stock: superStock
 }
 
 export const StockRow: Component<rowProps> = ({ stock }) => {
-  const [info, { mutate, refetch }] = createResource(async () => {
-    const res = await getStock(stock.ticker)
-    setPrice(stock.ticker, Number(res.price))
-
-    return res
-  })
-
   return (
     <tr>
       <td>{stock.ticker}</td>
@@ -34,33 +22,14 @@ export const StockRow: Component<rowProps> = ({ stock }) => {
         />
       </td>
       <td>
-        <Switch>
-          <Match when={info.loading}>
-            <>loading...</>
-          </Match>
-          <Match when={info.error}>
-            <button
-              class="bg-red-500"
-              onClick={async () => mutate(await refetch())}
-            >
-              error!
-            </button>
-          </Match>
-          <Match when={info()}>{info().price}</Match>
-        </Switch>
+        <Show when={!stock.fetched} fallback={'loading...'}>
+          {stock.price}
+        </Show>
       </td>
       <td>
-        <Switch>
-          <Match when={info.loading}>
-            <>loading...</>
-          </Match>
-          <Match when={info.error}>
-            <>error!</>
-          </Match>
-          <Match when={info()}>
-            {roundTo(Number(info().price) * stock.amount, 2)}
-          </Match>
-        </Switch>
+        <Show when={!stock.fetched} fallback={'loading...'}>
+          {stock.price}
+        </Show>
       </td>
       <td>{stock.weight}</td>
     </tr>

@@ -15,13 +15,14 @@ ws.onopen = () => {
   console.log('conected')
   ws.send(
     JSON.stringify({
-      subscribe: listeners.keys(),
+      subscribe: [...listeners.keys()],
     })
   )
 }
 
-ws.onclose = () => {
+ws.onclose = (e) => {
   console.log('closed')
+  console.log(e)
 }
 
 ws.onmessage = (message) => {
@@ -42,14 +43,19 @@ ws.onmessage = (message) => {
 }
 
 export function track(ticker: string, callback: (response: response) => void) {
-  if (ws.readyState === 1) {
-    // 1 means open
-
+  const traq = () => {
     ws.send(
       JSON.stringify({
         subscribe: [ticker],
       })
     )
     listeners.set(ticker, callback)
+    console.log('now tracking:', ticker)
+  }
+
+  if (ws.readyState === 1) {
+    traq()
+  } else {
+    ws.addEventListener('open', traq)
   }
 }

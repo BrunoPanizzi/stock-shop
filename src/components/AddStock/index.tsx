@@ -12,18 +12,13 @@ const AddStock: Component = () => {
 
     if (newStock().length < 5) return
 
-    addStock({
-      ticker: newStock().toUpperCase(),
-      amount: 0,
-      weight: 1,
-    })
+    addStock(newStock().toUpperCase())
   }
 
   return (
     <form class="my-4 text-lg" onSubmit={handleSubmit}>
       <Input
         type="text"
-        maxLength={6}
         onInput={(e) => setNewStock(e.currentTarget.value)}
         placeholder="New stock..."
       />

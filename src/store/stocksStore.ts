@@ -1,69 +1,36 @@
 import { createStore } from 'solid-js/store'
+import { track } from '../services/liveStocksService'
 
 import { stockWithPrice } from '../types/stock'
 
-export const [stocks, setStocks] = createStore<stockWithPrice[]>([
-  {
-    ticker: 'ITSA3',
-    amount: 0,
-    weight: 1,
-    price: null,
-    get value() {
-      return this.amount * this.price
-    },
-  },
-  {
-    ticker: 'B3SA3',
-    amount: 0,
-    weight: 1,
-    price: null,
-    get value() {
-      return this.amount * this.price
-    },
-  },
-  {
-    ticker: 'WEGE3',
-    amount: 0,
-    weight: 1,
-    price: null,
-    get value() {
-      return this.amount * this.price
-    },
-  },
-  {
-    ticker: 'ARZZ3',
-    amount: 5,
-    weight: 1,
-    price: null,
-    get value() {
-      return this.amount * this.price
-    },
-  },
-  {
-    ticker: 'MYPK3',
-    amount: 0,
-    weight: 1,
-    price: null,
-    get value() {
-      return this.amount * this.price
-    },
-  },
-  {
-    ticker: 'MDIA3',
-    amount: 0,
-    weight: 1,
-    price: null,
-    get value() {
-      return this.amount * this.price
-    },
-  },
-])
+export interface superStock extends stockWithPrice {
+  // for the websocket connection, just to make sure
+  fetched: boolean
+}
 
-export const addStock = (stock: stockWithPrice) => {
-  if (stocks.find((s) => s.ticker === stock.ticker)) {
+export const [stocks, setStocks] = createStore<superStock[]>([])
+
+export const addStock = (ticker: string) => {
+  if (stocks.find((s) => s.ticker === ticker)) {
     return
   }
-  setStocks((s) => [...s, stock])
+  track(ticker, (res) => {
+    setPrice(ticker, res.price)
+    setStocks((s) => s.ticker === ticker, 'fetched', true)
+  })
+  setStocks((s) => [
+    ...s,
+    {
+      ticker,
+      amount: 0,
+      weight: 1,
+      price: null,
+      get value() {
+        return this.amount * this.price
+      },
+      fetched: false,
+    },
+  ])
 }
 
 export const changeAmount = (ticker: string, amount: number) => {
