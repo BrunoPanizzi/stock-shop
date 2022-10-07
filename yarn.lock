@@ -1241,11 +1241,6 @@ xtend@^4.0.2:
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
   integrity sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==
 
-yahoo-stock-prices-fetch@^1.4.4:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/yahoo-stock-prices-fetch/-/yahoo-stock-prices-fetch-1.4.4.tgz#bdcc6b65d13727bb1b528472a0edfea48c5c9566"
-  integrity sha512-rbAg0cRdGkU2C3m6+BzbGZZKM4p++i6QRQCIUMfH04qqpIGqKpXPHhqCTsNhBhPiS8g0jWHVP988M87HagezSw==
-
 yaml@^1.10.2:
   version "1.10.2"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
