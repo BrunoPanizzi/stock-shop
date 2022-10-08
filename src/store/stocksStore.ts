@@ -4,7 +4,6 @@ import { track } from '../services/liveStocksService'
 import { stockWithPrice } from '../types/stock'
 
 export interface superStock extends stockWithPrice {
-  // for the websocket connection, just to make sure
   fetched: boolean
 }
 
@@ -40,3 +39,4 @@ export const changeAmount = (ticker: string, amount: number) => {
 export const setPrice = (ticker: string, price: number) => {
   setStocks((s) => s.ticker === ticker, 'price', price)
 }
+

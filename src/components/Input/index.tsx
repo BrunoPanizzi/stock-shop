@@ -1,7 +1,7 @@
 import { Component } from 'solid-js'
 
 interface props {
-  type: 'text' | 'number'
+  type?: 'text' | 'number'
   onInput: (
     e: InputEvent & {
       currentTarget: HTMLInputElement
@@ -15,7 +15,7 @@ interface props {
 }
 
 const Input: Component<props> = ({
-  type,
+  type = 'text',
   onInput,
   maxLength,
   placeholder,
@@ -36,3 +36,4 @@ const Input: Component<props> = ({
 }
 
 export default Input
+

@@ -1,5 +1,7 @@
 import { Component, Show } from 'solid-js'
 
+import rememberPrev from '../../utils/rememberPrev'
+
 import { changeAmount, superStock } from '../../store/stocksStore'
 
 interface rowProps {
@@ -9,7 +11,7 @@ interface rowProps {
 export const StockRow: Component<rowProps> = ({ stock }) => {
   let inpRef: HTMLInputElement = null
 
-  let weirdRemember = weirdClojure((prev: string, value: string) => {
+  let formatInput = rememberPrev((prev: string, value: string) => {
     if (!isNaN(Number(value)) && value.trim() === value) {
       inpRef.value = value
       changeAmount(stock.ticker, Number(value) || 0)
@@ -27,31 +29,21 @@ export const StockRow: Component<rowProps> = ({ stock }) => {
           class="bg-transparent border w-full focus:outline-0 focus:border-slate-800"
           min={0}
           value={stock.amount}
-          onInput={(e) => {
-            weirdRemember(e.currentTarget.value)
-          }}
+          onInput={(e) => formatInput(e.currentTarget.value)}
           ref={inpRef}
         />
       </td>
       <td>
         <Show when={stock.fetched} fallback={'loading...'}>
-          {stock.price}
+          {stock.price.toFixed(2)}
         </Show>
       </td>
       <td>
         <Show when={stock.fetched} fallback={'loading...'}>
-          {stock.price}
+          {stock.value.toFixed(2)}
         </Show>
       </td>
       <td>{stock.weight}</td>
     </tr>
   )
-}
-
-function weirdClojure<T>(callback: (prev: T, curr: T) => T) {
-  let prev: T = null
-
-  return (value: T) => {
-    prev = callback(prev, value)
-  }
 }
